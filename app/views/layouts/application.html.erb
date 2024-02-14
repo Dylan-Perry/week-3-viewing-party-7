@@ -13,6 +13,11 @@
   <body>
     <nav>
       <%= link_to "Home", root_path %>
+      <% if current_user %>
+        <%= link_to "Log Out", root_path(log_out: true) %>
+      <% else %>
+        <%= link_to "Log In", "/login"%>
+      <% end %>
     </nav>
 
     <% flash.each do |name, msg| %>
