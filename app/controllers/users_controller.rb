@@ -4,7 +4,12 @@ class UsersController < ApplicationController
   end 
 
   def show 
-    @user = User.find(params[:id])
+    if current_user
+      @user = User.find(params[:id])
+    else
+      flash[:error] = "You must be logged in or registered to access a user's dashboard."
+      redirect_to root_path
+    end
   end 
 
   def create 
@@ -27,6 +32,7 @@ class UsersController < ApplicationController
     user = User.find_by(email: params[:email])
     if user && user.authenticate(params[:password])
       session[:user_id] = user.id
+      cookies.encrypted[:location] = params[:location]
       flash[:success] = "Welcome, #{user.name}"
       redirect_to "/users/#{user.id}"
     else 
